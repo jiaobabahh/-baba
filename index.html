@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商商品多条件筛选系统</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <div>
+                <p class="eyebrow">离散数学 · 实验 02</p>
+                <h1>电商商品筛选系统</h1>
+            </div>
+            <p class="inventory-count"><strong id="inventoryCount">6</strong><span>件商品</span></p>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="filter-section" aria-labelledby="filter-title">
+            <div class="section-heading">
+                <p class="eyebrow">筛选条件</p>
+                <h2 id="filter-title">找到符合条件的商品</h2>
+            </div>
+
+            <div class="filter-controls">
+                <label class="filter-field" for="category">
+                    <span>商品类别</span>
+                    <select id="category">
+                        <option value="全部">全部类别</option>
+                        <option value="家电">家电</option>
+                        <option value="服装">服装</option>
+                        <option value="食品">食品</option>
+                    </select>
+                </label>
+
+                <label class="filter-field" for="price">
+                    <span>价格区间</span>
+                    <select id="price">
+                        <option value="全部">全部价格</option>
+                        <option value="0-100">0-100 元</option>
+                        <option value="100-500">100-500 元（不含100）</option>
+                        <option value="500以上">500 元以上</option>
+                    </select>
+                </label>
+
+                <label class="filter-field" for="shipping">
+                    <span>是否包邮</span>
+                    <select id="shipping">
+                        <option value="全部">全部</option>
+                        <option value="是">包邮</option>
+                        <option value="否">不包邮</option>
+                    </select>
+                </label>
+
+                <div class="filter-actions">
+                    <button class="primary-button" id="applyFilters" type="button">开始筛选</button>
+                    <button class="secondary-button" id="resetFilters" type="button">重置条件</button>
+                </div>
+            </div>
+            <p class="filter-hint">
+                提示：修改下拉框会立即刷新结果；选项括号中的件数表示当前全集 S 中符合该条件的商品数量。
+            </p>
+        </section>
+
+        <section class="catalog-section" aria-labelledby="results-title">
+            <div class="results-heading">
+                <div class="section-heading">
+                    <p class="eyebrow">筛选结果</p>
+                    <h2 id="results-title">商品目录</h2>
+                </div>
+                <div class="results-meta">
+                    <p class="expression" id="expression">未选择筛选条件，显示全集 S</p>
+                    <p class="result-summary" id="resultSummary">正在统计筛选结果……</p>
+                </div>
+            </div>
+            <div id="result" class="product-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="original-section" aria-labelledby="original-title">
+            <div class="section-heading">
+                <p class="eyebrow">商品全集</p>
+                <h2 id="original-title">原始商品集合 S</h2>
+            </div>
+            <details>
+                <summary>展开 / 收起全部商品（<span id="originalCount">6</span> 件）</summary>
+                <div id="originalSet" class="product-grid"></div>
+            </details>
+        </section>
+
+        <section class="set-section" aria-labelledby="set-title">
+            <div class="section-heading">
+                <p class="eyebrow">离散数学</p>
+                <h2 id="set-title">集合运算演示</h2>
+            </div>
+            <div class="set-definitions">
+                <div class="set-definition">
+                    <p><strong>A</strong><span>家电商品</span></p>
+                    <p class="set-roster" id="rosterA">A = { … }</p>
+                </div>
+                <div class="set-definition">
+                    <p><strong>B</strong><span>价格大于 100 元且不超过 500 元</span></p>
+                    <p class="set-roster" id="rosterB">B = { … }</p>
+                </div>
+            </div>
+            <div class="set-buttons" role="group" aria-label="选择集合运算">
+                <button class="secondary-button" id="unionButton" type="button">并集 A ∪ B</button>
+                <button class="secondary-button" id="intersectionButton" type="button">交集 A ∩ B</button>
+                <button class="secondary-button" id="differenceButton" type="button">差集 A - B</button>
+                <button class="secondary-button" id="reverseDifferenceButton" type="button">差集 B - A</button>
+                <button class="secondary-button" id="complementButton" type="button">补集 Aᶜ</button>
+                <button class="secondary-button" id="symmetricButton" type="button">对称差 A ⊕ B</button>
+                <button class="secondary-button" id="resetSetButton" type="button">清空运算结果</button>
+            </div>
+            <p class="expression set-expression" id="setExpression">点击运算开始计算</p>
+            <p class="set-roster set-result-roster" id="setRoster">
+                A 与 B 由商品全集 S 实时定义，点击任意运算后在这里显示结果与基数。
+            </p>
+            <div id="setResult" class="product-grid" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="section-heading">
+                <p class="eyebrow">实验提示</p>
+                <h2>集合运算规则</h2>
+            </div>
+            <ul class="rule-list">
+                <li>并集 A ∪ B 需要去重：同一个元素在集合中只计一次。</li>
+                <li>交集 A ∩ B 是“既属于 A 又属于 B”的元素，筛选条件同时生效时取的就是交集。</li>
+                <li>补集 Aᶜ 依赖全集 S，表示 S 中所有不属于 A 的元素。</li>
+                <li>差集有方向：A - B 表示“属于 A 且不属于 B”，通常不等于 B - A。</li>
+                <li>对称差 A ⊕ B = (A - B) ∪ (B - A)，即只属于其中一个集合的元素。</li>
+                <li>基数满足 |A ∪ B| + |A ∩ B| = |A| + |B|，可用于校验运算结果。</li>
+            </ul>
+            <a class="record-link" href="测试记录.md" target="_blank" rel="noopener">查看测试记录</a>
+        </div>
+    </footer>
+</body>
+</html>
